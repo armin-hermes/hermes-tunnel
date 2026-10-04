@@ -1,0 +1,19 @@
+name: Test Worker Endpoints
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Endpoints
+        run: |
+          set -e
+          echo "=== 1. Login Page ==="
+          curl -sI "https://hermes-tunnel.armin-hermes.workers.dev/hermes/login" | head -n 10
+          
+          echo "=== 2. Sing-box Warp Sub ==="
+          curl -s "https://hermes-tunnel.armin-hermes.workers.dev/hermes/sub/warp?app=sing-box" | head -n 30
+          
+          echo "=== 3. Xray Warp Sub ==="
+          curl -s "https://hermes-tunnel.armin-hermes.workers.dev/hermes/sub/warp?app=xray" | head -n 30
