@@ -17,9 +17,11 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Deploy to Cloudflare Workers
+      - name: Inject Secrets and Deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          sed -i "s|__CF_API_TOKEN__|$CLOUDFLARE_API_TOKEN|g" src/worker.js
+          sed -i "s|__CF_ACCOUNT_ID__|$CLOUDFLARE_ACCOUNT_ID|g" src/worker.js
           npx wrangler deploy
