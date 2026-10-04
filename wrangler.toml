@@ -3,3 +3,7 @@ main = "src/worker.js"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
+
+[[kv_namespaces]]
+binding = "kv"
+id = "89fc7fb9f7e941bba964e5a4a48e929c"

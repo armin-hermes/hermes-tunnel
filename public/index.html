@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HERMES // TUNNEL GATEWAY — Rightel & Mokhaberat Special</title>
+  <title>HERMES // PROXY ENGINE — Rightel & Mokhaberat Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Vazirmatn:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #06080d;
-      --card-bg: rgba(13, 17, 26, 0.75);
+      --bg: #07090e;
+      --card-bg: rgba(14, 18, 27, 0.8);
       --card-border: rgba(255, 255, 255, 0.08);
       --cyan: #38bdf8;
       --magenta: #ec4899;
@@ -21,17 +21,13 @@
       --text-muted: #94a3b8;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 88% 82%, rgba(236, 72, 153, 0.14) 0%, transparent 40%),
         linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
       background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
@@ -44,16 +40,9 @@
       padding: 2.5rem 1.25rem;
     }
 
-    .container {
-      width: 100%;
-      max-width: 920px;
-    }
+    .container { width: 100%; max-width: 960px; }
 
-    /* Header */
-    header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
+    header { text-align: center; margin-bottom: 2.5rem; }
 
     .status-badge {
       display: inline-flex;
@@ -70,9 +59,7 @@
     }
 
     .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+      width: 8px; height: 8px; border-radius: 50%;
       background: var(--emerald);
       box-shadow: 0 0 12px var(--emerald);
       animation: pulse 2s infinite;
@@ -84,7 +71,7 @@
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.6rem;
       font-weight: 900;
       line-height: 1.2;
       background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 100%);
@@ -96,44 +83,63 @@
     .subtitle {
       color: var(--text-muted);
       font-size: 1.05rem;
-      max-width: 620px;
+      max-width: 680px;
       margin: 0 auto;
       line-height: 1.6;
     }
 
-    /* Main CTA Box */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-item { text-align: center; padding: 0.5rem; }
+
+    .stat-val {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-lbl { font-size: 0.82rem; color: var(--text-muted); }
+
     .cta-box {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.35);
       border-radius: 20px;
       padding: 2rem;
       backdrop-filter: blur(12px);
       margin-bottom: 2.5rem;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.35);
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
 
     .cta-title {
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       font-weight: 800;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
       color: #fff;
     }
 
-    .sub-input-group {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
+    .sub-input-group { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 
     .sub-input {
       flex: 1;
-      min-width: 260px;
-      background: rgba(0, 0, 0, 0.4);
+      min-width: 280px;
+      background: rgba(0, 0, 0, 0.45);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 12px;
       padding: 0.85rem 1rem;
@@ -182,10 +188,11 @@
       transform: translateY(-2px);
     }
 
-    /* Cards Grid */
+    .sub-formats { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.25rem;
       margin-bottom: 2.5rem;
     }
@@ -200,6 +207,7 @@
       justify-content: space-between;
       gap: 1rem;
       transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
     }
 
     .node-card:hover {
@@ -208,16 +216,8 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
 
-    .node-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .node-name {
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
+    .node-header { display: flex; justify-content: space-between; align-items: center; }
+    .node-name { font-weight: 700; font-size: 1.1rem; }
 
     .node-badge {
       font-size: 0.75rem;
@@ -234,56 +234,31 @@
       line-height: 1.5;
     }
 
-    .node-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
+    .node-actions { display: flex; gap: 0.5rem; }
 
-    .btn-sm {
-      padding: 0.5rem 0.9rem;
-      font-size: 0.85rem;
-      flex: 1;
-    }
+    .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.85rem; flex: 1; }
 
-    /* Details Panel */
     .details-box {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 18px;
       padding: 1.8rem;
       margin-bottom: 2.5rem;
+      backdrop-filter: blur(10px);
     }
 
     .details-title {
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 800;
       margin-bottom: 1.25rem;
       color: #fff;
     }
 
-    .info-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    .info-table tr {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .info-table tr:last-child {
-      border-bottom: none;
-    }
-
-    .info-table td {
-      padding: 0.75rem 0;
-    }
-
-    .info-label {
-      color: var(--text-muted);
-      width: 35%;
-    }
-
+    .info-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .info-table tr { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .info-table tr:last-child { border-bottom: none; }
+    .info-table td { padding: 0.75rem 0; }
+    .info-label { color: var(--text-muted); width: 35%; }
     .info-val {
       color: var(--text);
       font-family: 'Space Grotesk', monospace;
@@ -291,7 +266,27 @@
       text-align: left;
     }
 
-    /* QR Modal */
+    .guide-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px dashed rgba(16, 185, 129, 0.35);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .guide-title {
+      font-weight: 800;
+      color: var(--emerald);
+      margin-bottom: 0.75rem;
+      font-size: 1.05rem;
+    }
+
+    .guide-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
     #qrModal {
       display: none;
       position: fixed;
@@ -317,13 +312,8 @@
       gap: 1.25rem;
     }
 
-    #qrCanvas {
-      background: #fff;
-      padding: 12px;
-      border-radius: 12px;
-    }
+    #qrCanvas { background: #fff; padding: 12px; border-radius: 12px; }
 
-    /* Toast */
     #toast {
       position: fixed;
       bottom: 2rem;
@@ -355,43 +345,74 @@
     <header>
       <div class="status-badge">
         <span class="status-dot"></span>
-        پروکسی فعال • بهینه‌سازی‌شده برای رایتل و مخابرات
+        سامانه فعال • بهینه‌سازی‌شده برای رایتل، مخابرات و همراه
       </div>
-      <h1>HERMES // TUNNEL GATEWAY</h1>
+      <h1>HERMES // PROXY ENGINE</h1>
       <p class="subtitle">
-        پایگاه اتصال امن و بدون قطعی آرمین بر بستر شبکه جهانی کلودفلر؛ مجهز به پروتکل VLESS، فرگمنت ضد فیلترینگ و آی‌پی‌های تمیز مخابرات و همراه.
+        سیستم تونل و پروکسی پیشرفتهٔ آرمین مبتنی بر کلودفلر؛ مجهز به دیتابیس KV، مسیریابی آی‌پی تمیز، دور زدن DPI مخابرات، و اشتراک چندفرمتِ Sing-box و Clash.
       </p>
     </header>
 
-    <!-- Main Subscription CTA -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-val">VLESS + TROJAN</div>
+        <div class="stat-lbl">پروتکل‌های فعال</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" style="color: var(--emerald);">CLOUDFLARE KV</div>
+        <div class="stat-lbl">ذخیره‌سازی ابری</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" style="color: var(--magenta);">FRAGMENT ON</div>
+        <div class="stat-lbl">ضد فیلترینگ عمیق</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" style="color: var(--purple);">7 ENDPOINTS</div>
+        <div class="stat-lbl">گره‌های بهینه‌شده</div>
+      </div>
+    </div>
+
     <div class="cta-box">
       <div class="cta-title">
         🔗 لینک اشتراک هوشمند (Subscription URL)
       </div>
       <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
-        این لینک رو مستقیماً توی نرم‌افزارهای <strong>v2rayNG، NikaNG، Streisand، Sing-box یا Hiddify</strong> به عنوان سابسکریپشن اضافه کن تا تمام کانفیگ‌های فعال (رایتل، مخابرات، همراه‌اول و ایرانسل) با هم آپدیت بشن:
+        این لینک اشتراک به صورت پویا کانفیگ‌های تست‌شده و سالم رایتل، مخابرات، همراه اول و ایرانسل رو یکجا تحویل میده:
       </p>
       <div class="sub-input-group">
         <input type="text" id="subUrl" class="sub-input" readonly value="">
-        <button class="btn btn-primary" onclick="copySub()">کپی لینک اشتراک</button>
+        <button class="btn btn-primary" onclick="copySub('v2ray')">کپی لینک V2Ray</button>
+      </div>
+      <div class="sub-formats">
+        <button class="btn btn-secondary btn-sm" onclick="copySub('singbox')">⚡️ کپی ساب Sing-box (JSON با فرگمنت)</button>
+        <button class="btn btn-secondary btn-sm" onclick="copySub('clash')">🐱 کپی ساب Clash Meta / Mihomo</button>
       </div>
     </div>
 
-    <!-- Node Presets -->
+    <div class="guide-box">
+      <div class="guide-title">💡 آموزش اتصال روی مخابرات و رفع قطعی (مهم):</div>
+      <div class="guide-text">
+        مخابرات روی پورت 443 به دامنه‌های رایگان حساس است. برای اتصال ۱۰۰٪ بدون قطعی روی اینترنت مخابرات:
+        <br>۱. از کانفیگ <strong>«مخابرات • پورت اختصاصی ۸۴۴۳»</strong> استفاده کنید.
+        <br>۲. در برنامه v2rayNG به بخش <strong>Settings ⬅️ Fragment</strong> بروید و این مقادیر را ست کنید:
+        <strong>Packets: tlshello | Length: 10-20 | Interval: 10-20</strong>.
+      </div>
+    </div>
+
     <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem; color: #fff;">
-      ⚡️ کانفیگ‌های اختصاصی اپراتورها
+      ⚡️ گره‌های اختصاصی تفکیک‌شده بر اساس اپراتور
     </h2>
 
     <div class="grid">
-      <!-- Rightel -->
+      <!-- Rightel Turbo -->
       <div class="node-card" style="border-top: 3px solid var(--magenta);">
         <div>
           <div class="node-header">
-            <span class="node-name">🟣 رایتل (Rightel Turbo)</span>
+            <span class="node-name">🟣 رایتل • توربو (Rightel Turbo)</span>
             <span class="node-badge" style="color: var(--magenta); border-color: rgba(236, 72, 153, 0.4);">پیشنهادی</span>
           </div>
           <p class="node-desc" style="margin-top: 0.6rem;">
-            بهینه‌سازی‌شده برای سیم‌کارت‌های رایتل؛ بدون افت سرعت با تنظیمات فرگمنت پکت‌های TLS.
+            مخصوص سیم‌کارت‌های رایتل؛ اتصال مستقیم با پینگ پایین و بدون افت کیفیت روی استریم و یوتیوب.
           </p>
         </div>
         <div class="node-actions">
@@ -400,15 +421,32 @@
         </div>
       </div>
 
-      <!-- Mokhaberat Special (TCI Port 8443) -->
+      <!-- Rightel Clean IP -->
+      <div class="node-card" style="border-top: 3px solid var(--magenta);">
+        <div>
+          <div class="node-header">
+            <span class="node-name">🟣 رایتل • آی‌پی تمیز (Clean IP)</span>
+            <span class="node-badge" style="color: var(--magenta); border-color: rgba(236, 72, 153, 0.4);">رنج ۱۰۴</span>
+          </div>
+          <p class="node-desc" style="margin-top: 0.6rem;">
+            مسیریابی از طریق آی‌پی کلودفلر 104.16.148.243 بدون ریسک اختلالات دامنه‌ای.
+          </p>
+        </div>
+        <div class="node-actions">
+          <button class="btn btn-primary btn-sm" onclick="copyNode('rightel_clean')">کپی VLESS</button>
+          <button class="btn btn-secondary btn-sm" onclick="showQR('rightel_clean')">QR Code</button>
+        </div>
+      </div>
+
+      <!-- Mokhaberat Port 8443 -->
       <div class="node-card" style="border-top: 3px solid var(--emerald);">
         <div>
           <div class="node-header">
-            <span class="node-name">🟢 مخابرات (TCI Port 8443)</span>
-            <span class="node-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">ضد اختلال</span>
+            <span class="node-name">🟢 مخابرات • پورت ۸۴۴۳ (TCI Bypass)</span>
+            <span class="node-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">ضد فیلتر TCI</span>
           </div>
           <p class="node-desc" style="margin-top: 0.6rem;">
-            مخصوص اینترنت ثابت ADSL و فیبر مخابرات (TCI) روی پورت امن ۸۴۴۳ برای دور زدن محدودیت‌های پورت ۴۴۳.
+            دور زدن فایروال پورت ۴۴۳ اینترنت ثابت مخابرات (ADSL/فیبر) با استفاده از پورت امن جایگزین ۸۴۴۳.
           </p>
         </div>
         <div class="node-actions">
@@ -417,15 +455,15 @@
         </div>
       </div>
 
-      <!-- Mokhaberat Clean IP (TCI Direct) -->
+      <!-- Mokhaberat Clean IP -->
       <div class="node-card" style="border-top: 3px solid var(--emerald);">
         <div>
           <div class="node-header">
-            <span class="node-name">🟢 مخابرات (TCI Clean IP)</span>
-            <span class="node-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">Clean IP</span>
+            <span class="node-name">🟢 مخابرات • آی‌پی تمیز ۱۰۴ (TCI Clean)</span>
+            <span class="node-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">Clean Range</span>
           </div>
           <p class="node-desc" style="margin-top: 0.6rem;">
-            اتصال با آی‌پی تمیز رنج ۱۰۴ کلودفلر تست‌شده روی گیت‌وی‌های مخابرات تهران و شهرستان‌ها.
+            اتصال بر بستر گیت‌وی 104.17.34.10 مخصوص خطوط اینترنت خانگی بدون پکت‌لاس.
           </p>
         </div>
         <div class="node-actions">
@@ -438,11 +476,11 @@
       <div class="node-card" style="border-top: 3px solid var(--cyan);">
         <div>
           <div class="node-header">
-            <span class="node-name">🔵 همراه‌اول (MCI Fast)</span>
-            <span class="node-badge">Clean IP</span>
+            <span class="node-name">🔵 همراه اول • پرسرعت (MCI Fast)</span>
+            <span class="node-badge">Speed Path</span>
           </div>
           <p class="node-desc" style="margin-top: 0.6rem;">
-            مسیریابی از طریق آی‌پی‌های تمیز Cloudflare Edge بدون پکت‌لاس روی اینترنت همراه اول.
+            مسیریابی بهینه برای دکل‌های همراه‌اول با استفاده از شتاب‌دهنده جهانی Cloudflare Speed.
           </p>
         </div>
         <div class="node-actions">
@@ -455,11 +493,11 @@
       <div class="node-card" style="border-top: 3px solid var(--amber);">
         <div>
           <div class="node-header">
-            <span class="node-name">🟡 ایرانسل (MTN Direct)</span>
-            <span class="node-badge" style="color: var(--amber); border-color: rgba(245, 158, 11, 0.4);">TLS 443</span>
+            <span class="node-name">🟡 ایرانسل • مستقیم (MTN Direct)</span>
+            <span class="node-badge" style="color: var(--amber); border-color: rgba(245, 158, 11, 0.4);">Direct Edge</span>
           </div>
           <p class="node-desc" style="margin-top: 0.6rem;">
-            اتصال پرسرعت پورت ۴۴۳ بر بستر وب‌سوکت رمزنگاری‌شده، مناسب وب‌گردی و یوتیوب.
+            اتصال بدون واسطه به نزدیک‌ترین سرور Edge کلودفلر، مناسب پیام‌رسان‌ها و وب‌گردی.
           </p>
         </div>
         <div class="node-actions">
@@ -469,45 +507,47 @@
       </div>
     </div>
 
-    <!-- Technical Details -->
     <div class="details-box">
-      <div class="details-title">🛠 مشخصات فنی پروتکل (جهت تنظیمات دستی)</div>
+      <div class="details-title">🛠 مشخصات فنی هسته پروکسی (هرمس تونل v2.0)</div>
       <table class="info-table">
         <tr>
-          <td class="info-label">پروتکل (Protocol)</td>
-          <td class="info-val">VLESS / Trojan over WebSocket (WS)</td>
+          <td class="info-label">پروتکل‌های هسته (Cores)</td>
+          <td class="info-val">VLESS-WS-TLS • Trojan-WS-TLS</td>
         </tr>
         <tr>
-          <td class="info-label">پورت‌های فعال (TLS Ports)</td>
+          <td class="info-label">پورت‌های فعال (Active Ports)</td>
           <td class="info-val">443, 8443, 2053, 2083, 2087, 2096</td>
         </tr>
         <tr>
-          <td class="info-label">شناسه کاربری (UUID)</td>
+          <td class="info-label">شناسه اختصاصی (UUID)</td>
           <td class="info-val" id="dispUuid">f2fa065d-1dff-468a-a7cb-3faf1352b8ce</td>
         </tr>
         <tr>
-          <td class="info-label">رمز عبور تروجان (Password)</td>
+          <td class="info-label">رمز عبور تروجان (Trojan Pass)</td>
           <td class="info-val">HermesArmin2026</td>
         </tr>
         <tr>
-          <td class="info-label">تنظیمات فرگمنت رایتل / مخابرات</td>
-          <td class="info-val">Packets: 1-3 | Length: 10-20 | Interval: 10-20ms</td>
+          <td class="info-label">دیتابیس ابری (Cloudflare KV)</td>
+          <td class="info-val">ID: 89fc7fb9f7e941bba964e5a4a48e929c</td>
+        </tr>
+        <tr>
+          <td class="info-label">مسیریابی فال‌بک (NAT64 IPv6)</td>
+          <td class="info-val">[2602:fc59:b0:64::], [2602:fc59:11:64::]</td>
         </tr>
       </table>
     </div>
 
     <footer>
-      طراحی‌شده توسط <strong>Hermes Agent</strong> برای <strong>آرمین</strong> • میزبانی‌شده روی سرورهای <a href="https://cloudflare.com" target="_blank" style="color: var(--cyan); text-decoration: none;">Cloudflare Edge</a>
+      طراحی‌شده توسط <strong>Hermes Agent</strong> برای <strong>آرمین</strong> • پایگاه اختصاصی <a href="https://github.com/armin-hermes/hermes-tunnel" target="_blank" style="color: var(--cyan); text-decoration: none;">armin-hermes/hermes-tunnel</a>
     </footer>
   </div>
 
-  <!-- QR Modal -->
   <div id="qrModal" onclick="closeQR(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <h3 id="qrTitle" style="font-size: 1.15rem; font-weight: 800;">اسکن کانفیگ</h3>
       <canvas id="qrCanvas"></canvas>
       <p style="font-size: 0.85rem; color: var(--text-muted);">
-        دوربین v2rayNG یا Streisand را روبه‌روی بارکد بگیرید
+        دوربین v2rayNG، Sing-box یا Hiddify را روبه‌روی بارکد بگیرید
       </p>
       <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="document.getElementById('qrModal').style.display='none'">بستن</button>
     </div>
@@ -515,20 +555,19 @@
 
   <div id="toast">کپی شد! ✅</div>
 
-  <!-- Minimal QR Code Generator Library (embedded) -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script>
     const UUID = 'f2fa065d-1dff-468a-a7cb-3faf1352b8ce';
     const HOST = window.location.hostname || 'hermes-tunnel.armin-hermes.workers.dev';
 
-    // Set Sub URL
     const subLink = window.location.origin + '/sub';
     document.getElementById('subUrl').value = subLink;
 
     const NODES = {
       rightel: `vless://${UUID}@cloudflare.com:443?encryption=none&security=tls&sni=${HOST}&type=ws&host=${HOST}&path=%2F#%F0%9F%9F%A3%20Hermes-Rightel-Turbo`,
+      rightel_clean: `vless://${UUID}@104.16.148.243:443?encryption=none&security=tls&sni=${HOST}&type=ws&host=${HOST}&path=%2F#%F0%9F%9F%A3%20Hermes-Rightel-Clean`,
       tci_8443: `vless://${UUID}@speed.cloudflare.com:8443?encryption=none&security=tls&sni=${HOST}&type=ws&host=${HOST}&path=%2F#%F0%9F%9F%A2%20Hermes-TCI-Port8443`,
-      tci_clean: `vless://${UUID}@104.17.34.10:443?encryption=none&security=tls&sni=${HOST}&type=ws&host=${HOST}&path=%2F#%F0%9F%9F%A2%20Hermes-TCI-Clean`,
+      tci_clean: `vless://${UUID}@104.17.34.10:443?encryption=none&security=tls&sni=${HOST}&type=ws&host=${HOST}&path=%2F#%F0%9F%9F%A2%20Hermes-TCI-CleanIP`,
       mci: `vless://${UUID}@speed.cloudflare.com:443?encryption=none&security=tls&sni=${HOST}&type=ws&host=${HOST}&path=%2F#%F0%9F%94%B5%20Hermes-MCI-Clean`,
       mtn: `vless://${UUID}@${HOST}:443?encryption=none&security=tls&sni=${HOST}&type=ws&host=${HOST}&path=%2F#%F0%9F%9F%A1%20Hermes-MTN-Direct`
     };
@@ -540,9 +579,12 @@
       setTimeout(() => { t.style.opacity = '0'; }, 2000);
     }
 
-    function copySub() {
-      navigator.clipboard.writeText(subLink).then(() => {
-        showToast('لینک اشتراک کپی شد! ✅');
+    function copySub(fmt) {
+      let link = subLink;
+      if (fmt === 'singbox') link += '?format=singbox';
+      if (fmt === 'clash') link += '?format=clash';
+      navigator.clipboard.writeText(link).then(() => {
+        showToast('لینک سابسکریپشن کپی شد! ✅');
       });
     }
 
@@ -556,7 +598,8 @@
     function showQR(key) {
       const link = NODES[key];
       const titles = { 
-        rightel: 'کانفیگ رایتل', 
+        rightel: 'کانفیگ رایتل توربو', 
+        rightel_clean: 'کانفیگ رایتل آی‌پی تمیز',
         tci_8443: 'کانفیگ مخابرات (پورت ۸۴۴۳)', 
         tci_clean: 'کانفیگ مخابرات (آی‌پی تمیز)', 
         mci: 'کانفیگ همراه اول', 
