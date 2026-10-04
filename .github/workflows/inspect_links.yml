@@ -1,0 +1,14 @@
+name: Inspect VLESS Links
+on:
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Normal Xray Sub
+        run: |
+          echo "=== Normal Xray Sub ==="
+          curl -s "https://hermes-tunnel.armin-hermes.workers.dev/hermes/sub/normal?app=xray" | base64 -d | head -n 15
+          echo "=== Fragment Xray Sub ==="
+          curl -s "https://hermes-tunnel.armin-hermes.workers.dev/hermes/sub/fragment?app=xray" | base64 -d | head -n 15
