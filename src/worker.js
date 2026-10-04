@@ -10,7 +10,7 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HERMES // TUNNEL GATEWAY — Rightel & Iran Special</title>
+  <title>HERMES // TUNNEL GATEWAY — Rightel & Mokhaberat Special</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Vazirmatn:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -53,7 +53,7 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
 
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 920px;
     }
 
     /* Header */
@@ -103,7 +103,7 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
     .subtitle {
       color: var(--text-muted);
       font-size: 1.05rem;
-      max-width: 600px;
+      max-width: 620px;
       margin: 0 auto;
       line-height: 1.6;
     }
@@ -192,7 +192,7 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
     /* Cards Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
       gap: 1.25rem;
       margin-bottom: 2.5rem;
     }
@@ -362,11 +362,11 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
     <header>
       <div class="status-badge">
         <span class="status-dot"></span>
-        پروکسی فعال • بهینه‌سازی‌شده برای رایتل
+        پروکسی فعال • بهینه‌سازی‌شده برای رایتل و مخابرات
       </div>
       <h1>HERMES // TUNNEL GATEWAY</h1>
       <p class="subtitle">
-        پایگاه اتصال امن و بدون قطعی آرمین بر بستر شبکه جهانی کلودفلر؛ مجهز به پروتکل VLESS، فرگمنت ضد فیلترینگ و آی‌پی‌های تمیز.
+        پایگاه اتصال امن و بدون قطعی آرمین بر بستر شبکه جهانی کلودفلر؛ مجهز به پروتکل VLESS، فرگمنت ضد فیلترینگ و آی‌پی‌های تمیز مخابرات و همراه.
       </p>
     </header>
 
@@ -376,7 +376,7 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
         🔗 لینک اشتراک هوشمند (Subscription URL)
       </div>
       <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
-        این لینک رو مستقیماً توی نرم‌افزارهای <strong>v2rayNG، NikaNG، Streisand، Sing-box یا Hiddify</strong> به عنوان سابسکریپشن اضافه کن تا تمام کانفیگ‌های فعال با هم بروزرسانی بشن:
+        این لینک رو مستقیماً توی نرم‌افزارهای <strong>v2rayNG، NikaNG، Streisand، Sing-box یا Hiddify</strong> به عنوان سابسکریپشن اضافه کن تا تمام کانفیگ‌های فعال (رایتل، مخابرات، همراه‌اول و ایرانسل) با هم آپدیت بشن:
       </p>
       <div class="sub-input-group">
         <input type="text" id="subUrl" class="sub-input" readonly value="">
@@ -398,12 +398,46 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
             <span class="node-badge" style="color: var(--magenta); border-color: rgba(236, 72, 153, 0.4);">پیشنهادی</span>
           </div>
           <p class="node-desc" style="margin-top: 0.6rem;">
-            بهینه‌سازی‌شده برای دکل‌های رایتل؛ بدون افت سرعت با تنظیمات فرگمنت پکت‌های TLS.
+            بهینه‌سازی‌شده برای سیم‌کارت‌های رایتل؛ بدون افت سرعت با تنظیمات فرگمنت پکت‌های TLS.
           </p>
         </div>
         <div class="node-actions">
           <button class="btn btn-primary btn-sm" onclick="copyNode('rightel')">کپی VLESS</button>
           <button class="btn btn-secondary btn-sm" onclick="showQR('rightel')">QR Code</button>
+        </div>
+      </div>
+
+      <!-- Mokhaberat Special (TCI Port 8443) -->
+      <div class="node-card" style="border-top: 3px solid var(--emerald);">
+        <div>
+          <div class="node-header">
+            <span class="node-name">🟢 مخابرات (TCI Port 8443)</span>
+            <span class="node-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">ضد اختلال</span>
+          </div>
+          <p class="node-desc" style="margin-top: 0.6rem;">
+            مخصوص اینترنت ثابت ADSL و فیبر مخابرات (TCI) روی پورت امن ۸۴۴۳ برای دور زدن محدودیت‌های پورت ۴۴۳.
+          </p>
+        </div>
+        <div class="node-actions">
+          <button class="btn btn-primary btn-sm" onclick="copyNode('tci_8443')">کپی VLESS</button>
+          <button class="btn btn-secondary btn-sm" onclick="showQR('tci_8443')">QR Code</button>
+        </div>
+      </div>
+
+      <!-- Mokhaberat Clean IP (TCI Direct) -->
+      <div class="node-card" style="border-top: 3px solid var(--emerald);">
+        <div>
+          <div class="node-header">
+            <span class="node-name">🟢 مخابرات (TCI Clean IP)</span>
+            <span class="node-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">Clean IP</span>
+          </div>
+          <p class="node-desc" style="margin-top: 0.6rem;">
+            اتصال با آی‌پی تمیز رنج ۱۰۴ کلودفلر تست‌شده روی گیت‌وی‌های مخابرات تهران و شهرستان‌ها.
+          </p>
+        </div>
+        <div class="node-actions">
+          <button class="btn btn-primary btn-sm" onclick="copyNode('tci_clean')">کپی VLESS</button>
+          <button class="btn btn-secondary btn-sm" onclick="showQR('tci_clean')">QR Code</button>
         </div>
       </div>
 
@@ -451,8 +485,8 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
           <td class="info-val">VLESS / Trojan over WebSocket (WS)</td>
         </tr>
         <tr>
-          <td class="info-label">پورت امن (Port)</td>
-          <td class="info-val">443 (TLS Enabled)</td>
+          <td class="info-label">پورت‌های فعال (TLS Ports)</td>
+          <td class="info-val">443, 8443, 2053, 2083, 2087, 2096</td>
         </tr>
         <tr>
           <td class="info-label">شناسه کاربری (UUID)</td>
@@ -463,11 +497,7 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
           <td class="info-val">HermesArmin2026</td>
         </tr>
         <tr>
-          <td class="info-label">مسیر وب‌سوکت (Path)</td>
-          <td class="info-val">/</td>
-        </tr>
-        <tr>
-          <td class="info-label">تنظیمات فرگمنت رایتل (Fragment)</td>
+          <td class="info-label">تنظیمات فرگمنت رایتل / مخابرات</td>
           <td class="info-val">Packets: 1-3 | Length: 10-20 | Interval: 10-20ms</td>
         </tr>
       </table>
@@ -496,7 +526,7 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script>
     const UUID = 'f2fa065d-1dff-468a-a7cb-3faf1352b8ce';
-    const HOST = window.location.hostname || 'hermes-tunnel.pages.dev';
+    const HOST = window.location.hostname || 'hermes-tunnel.armin-hermes.workers.dev';
 
     // Set Sub URL
     const subLink = window.location.origin + '/sub';
@@ -504,6 +534,8 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
 
     const NODES = {
       rightel: \`vless://\${UUID}@cloudflare.com:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A3%20Hermes-Rightel-Turbo\`,
+      tci_8443: \`vless://\${UUID}@speed.cloudflare.com:8443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A2%20Hermes-TCI-Port8443\`,
+      tci_clean: \`vless://\${UUID}@104.17.34.10:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A2%20Hermes-TCI-Clean\`,
       mci: \`vless://\${UUID}@speed.cloudflare.com:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%94%B5%20Hermes-MCI-Clean\`,
       mtn: \`vless://\${UUID}@\${HOST}:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A1%20Hermes-MTN-Direct\`
     };
@@ -530,7 +562,13 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
 
     function showQR(key) {
       const link = NODES[key];
-      const titles = { rightel: 'کانفیگ رایتل', mci: 'کانفیگ همراه اول', mtn: 'کانفیگ ایرانسل' };
+      const titles = { 
+        rightel: 'کانفیگ رایتل', 
+        tci_8443: 'کانفیگ مخابرات (پورت ۸۴۴۳)', 
+        tci_clean: 'کانفیگ مخابرات (آی‌پی تمیز)', 
+        mci: 'کانفیگ همراه اول', 
+        mtn: 'کانفیگ ایرانسل' 
+      };
       document.getElementById('qrTitle').innerText = titles[key];
       
       const modal = document.getElementById('qrModal');
@@ -581,16 +619,16 @@ function handleSubscription(request, url) {
   const host = request.headers.get('host') || url.hostname;
   
   const cleanNodes = [
-    { name: '⚡ Hermes-Rightel-Auto', addr: host },
-    { name: '🇮🇷 Hermes-Rightel-Clean-1', addr: 'cloudflare.com' },
-    { name: '🚀 Hermes-Rightel-Clean-2', addr: 'speed.cloudflare.com' },
-    { name: '🛡 Hermes-Rightel-Clean-3', addr: '104.16.148.243' },
-    { name: '🌐 Hermes-Rightel-Clean-4', addr: '172.67.74.150' },
-    { name: '🔥 Hermes-Rightel-Clean-5', addr: '162.159.136.234' }
+    { name: '⚡ Hermes-Auto', addr: host, port: 443 },
+    { name: '🟣 Hermes-Rightel-Turbo', addr: 'cloudflare.com', port: 443 },
+    { name: '🟢 Hermes-Mokhaberat-Port8443', addr: 'speed.cloudflare.com', port: 8443 },
+    { name: '🟢 Hermes-Mokhaberat-CleanIP', addr: '104.17.34.10', port: 443 },
+    { name: '🔵 Hermes-MCI-Clean', addr: 'speed.cloudflare.com', port: 443 },
+    { name: '🟡 Hermes-Irancell-Direct', addr: host, port: 443 }
   ];
 
   const configs = cleanNodes.map(node => {
-    return `vless://${RAW_UUID}@${node.addr}:443?encryption=none&security=tls&sni=${host}&type=ws&host=${host}&path=%2F#${encodeURIComponent(node.name)}`;
+    return `vless://${RAW_UUID}@${node.addr}:${node.port}?encryption=none&security=tls&sni=${host}&type=ws&host=${host}&path=%2F#${encodeURIComponent(node.name)}`;
   }).join('\n');
 
   const b64 = btoa(unescape(encodeURIComponent(configs)));
