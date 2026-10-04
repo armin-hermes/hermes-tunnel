@@ -1,0 +1,13 @@
+name: Inspect Raw Sub
+on:
+  workflow_dispatch:
+
+jobs:
+  inspect_raw:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Raw Sub
+        run: |
+          echo "=== Raw Sub (Base64) ==="
+          RAW=$(curl -s "https://hermes-tunnel.armin-hermes.workers.dev/hermes/sub/raw")
+          echo "$RAW" | base64 -d | head -n 30
