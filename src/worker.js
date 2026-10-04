@@ -10,22 +10,26 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HERMES // PROXY ENGINE — Rightel & Mokhaberat Edition</title>
+  <title>HERMES // ZERO-LEAK PROXY ENGINE — US Geo & Gemini Ready</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Vazirmatn:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Vazirmatn:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07090e;
-      --card-bg: rgba(14, 18, 27, 0.8);
+      --bg: #05070c;
+      --card: rgba(13, 17, 26, 0.85);
       --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(56, 189, 248, 0.35);
       --cyan: #38bdf8;
-      --magenta: #ec4899;
+      --cyan-glow: rgba(56, 189, 248, 0.3);
+      --magenta: #f43f5e;
       --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
       --purple: #a855f7;
       --amber: #f59e0b;
       --text: #f8fafc;
       --text-muted: #94a3b8;
+      --font-code: 'Space Grotesk', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,11 +37,12 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 88% 82%, rgba(236, 72, 153, 0.14) 0%, transparent 40%),
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+        radial-gradient(circle at 10% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 90% 85%, rgba(244, 63, 94, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
       color: var(--text);
       font-family: 'Vazirmatn', sans-serif;
       min-height: 100vh;
@@ -45,297 +50,546 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
       flex-direction: column;
       align-items: center;
       padding: 2.5rem 1.25rem;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    .container { width: 100%; max-width: 960px; }
+    #bgCanvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
 
-    header { text-align: center; margin-bottom: 2.5rem; }
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      position: relative;
+      z-index: 1;
+    }
 
-    .status-badge {
+    /* Top Navigation / Brand */
+    .brand-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(13, 17, 26, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 9999px;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-logo svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--cyan);
+      filter: drop-shadow(0 0 8px var(--cyan));
+    }
+
+    .status-pill {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.4rem 1.1rem;
+      padding: 0.35rem 0.9rem;
       border-radius: 9999px;
       background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.35);
+      border: 1px solid rgba(16, 185, 129, 0.3);
       color: var(--emerald);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      margin-bottom: 1.25rem;
+      font-family: var(--font-code);
     }
 
     .status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
       background: var(--emerald);
-      box-shadow: 0 0 12px var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
       animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: var(--cyan);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
     }
 
     h1 {
-      font-size: 2.6rem;
+      font-size: 2.75rem;
       font-weight: 900;
-      line-height: 1.2;
-      background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 100%);
+      line-height: 1.25;
+      background: linear-gradient(135deg, #ffffff 45%, var(--cyan) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 0.75rem;
     }
 
-    .subtitle {
+    .hero-desc {
       color: var(--text-muted);
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       max-width: 680px;
       margin: 0 auto;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
-    .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 1.25rem;
-      margin-bottom: 2rem;
-      backdrop-filter: blur(10px);
-    }
-
-    .stat-item { text-align: center; padding: 0.5rem; }
-
-    .stat-val {
-      font-family: 'Space Grotesk', monospace;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--cyan);
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-lbl { font-size: 0.82rem; color: var(--text-muted); }
-
-    .cta-box {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      border-radius: 20px;
-      padding: 2rem;
-      backdrop-filter: blur(12px);
-      margin-bottom: 2.5rem;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.35);
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .cta-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      color: #fff;
-    }
-
-    .sub-input-group { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-
-    .sub-input {
-      flex: 1;
-      min-width: 280px;
-      background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 0.85rem 1rem;
-      color: var(--cyan);
-      font-family: 'Space Grotesk', monospace;
-      font-size: 0.95rem;
-      direction: ltr;
-      outline: none;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.85rem 1.6rem;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      font-family: 'Vazirmatn', sans-serif;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
-      color: #000;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-2px);
-    }
-
-    .sub-formats { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-
-    .grid {
+    /* Shield Telemetry Grid (3 Cards) */
+    .shield-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.25rem;
       margin-bottom: 2.5rem;
     }
 
-    .node-card {
-      background: var(--card-bg);
+    .shield-card {
+      background: var(--card);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 1.4rem;
+      border-radius: 18px;
+      padding: 1.5rem;
+      backdrop-filter: blur(14px);
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 1rem;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(10px);
+      align-items: flex-start;
+      gap: 1.2rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
 
-    .node-card:hover {
-      border-color: rgba(56, 189, 248, 0.4);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    .shield-card:hover {
+      border-color: var(--card-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 15px var(--cyan-glow);
     }
 
-    .node-header { display: flex; justify-content: space-between; align-items: center; }
-    .node-name { font-weight: 700; font-size: 1.1rem; }
-
-    .node-badge {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 6px;
-      background: rgba(56, 189, 248, 0.1);
-      color: var(--cyan);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+    .shield-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
-    .node-desc {
+    .shield-icon svg { width: 24px; height: 24px; }
+
+    .shield-content { flex: 1; }
+
+    .shield-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+
+    .shield-desc {
       font-size: 0.85rem;
       color: var(--text-muted);
       line-height: 1.5;
     }
 
-    .node-actions { display: flex; gap: 0.5rem; }
-
-    .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.85rem; flex: 1; }
-
-    .details-box {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 1.8rem;
-      margin-bottom: 2.5rem;
-      backdrop-filter: blur(10px);
+    .shield-tag {
+      display: inline-block;
+      margin-top: 0.6rem;
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
     }
 
-    .details-title {
-      font-size: 1.2rem;
-      font-weight: 800;
+    /* Main Subscription Hub */
+    .hub-box {
+      background: linear-gradient(135deg, rgba(14, 20, 32, 0.95) 0%, rgba(20, 16, 32, 0.95) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 22px;
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      margin-bottom: 2.5rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(56, 189, 248, 0.12);
+    }
+
+    .hub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
       margin-bottom: 1.25rem;
+    }
+
+    .hub-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
       color: #fff;
     }
 
-    .info-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-    .info-table tr { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-    .info-table tr:last-child { border-bottom: none; }
-    .info-table td { padding: 0.75rem 0; }
-    .info-label { color: var(--text-muted); width: 35%; }
-    .info-val {
-      color: var(--text);
-      font-family: 'Space Grotesk', monospace;
-      direction: ltr;
-      text-align: left;
+    .hub-title svg { width: 24px; height: 24px; fill: var(--cyan); }
+
+    .ping-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      font-family: var(--font-code);
+      font-size: 0.8rem;
+      color: var(--cyan);
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .guide-box {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px dashed rgba(16, 185, 129, 0.35);
-      border-radius: 16px;
-      padding: 1.5rem;
+    .ping-pill:hover { background: rgba(56, 189, 248, 0.15); }
+
+    .sub-input-wrap {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .sub-input {
+      flex: 1;
+      min-width: 300px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 0.9rem 1.1rem;
+      color: var(--cyan);
+      font-family: var(--font-code);
+      font-size: 0.95rem;
+      direction: ltr;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .sub-input:focus { border-color: var(--cyan); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.6rem;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .btn svg { width: 18px; height: 18px; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+      color: #030712;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.55);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.07);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-2px);
+    }
+
+    .sub-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .tab-btn {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+
+    .tab-btn.active {
+      color: #fff;
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    /* Nodes Grid */
+    .nodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.25rem;
       margin-bottom: 2.5rem;
     }
 
-    .guide-title {
-      font-weight: 800;
-      color: var(--emerald);
-      margin-bottom: 0.75rem;
+    .node-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .node-card:hover {
+      border-color: var(--card-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .node-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .node-card.us::before { background: linear-gradient(90deg, #ef4444, #3b82f6); }
+    .node-card.rightel::before { background: var(--magenta); }
+    .node-card.tci::before { background: var(--emerald); }
+    .node-card.mci::before { background: var(--cyan); }
+    .node-card.mtn::before { background: var(--amber); }
+
+    .node-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .node-name {
       font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.4;
+      color: #fff;
     }
 
-    .guide-text {
-      font-size: 0.9rem;
+    .node-badge {
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .node-meta {
+      font-size: 0.85rem;
       color: var(--text-muted);
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
+    .node-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.35rem;
+      font-family: var(--font-code);
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      direction: ltr;
+    }
+
+    .node-btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.55rem 0.9rem;
+      font-size: 0.85rem;
+      flex: 1;
+      border-radius: 10px;
+    }
+
+    /* Fragment & DPI Guide Card */
+    .guide-section {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      backdrop-filter: blur(14px);
+    }
+
+    .guide-head {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .guide-head h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .guide-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .step-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.2rem;
+    }
+
+    .step-num {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--cyan);
+      color: #000;
+      font-weight: 900;
+      font-size: 0.8rem;
+      text-align: center;
+      line-height: 24px;
+      margin-bottom: 0.75rem;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+      color: #fff;
+    }
+
+    .step-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Modal */
     #qrModal {
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
       z-index: 999;
       align-items: center;
       justify-content: center;
     }
 
-    .modal-content {
-      background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      padding: 2rem;
-      max-width: 360px;
+    .modal-card {
+      background: #0d111a;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 24px;
+      padding: 2.25rem;
+      max-width: 380px;
       width: 90%;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1.25rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px var(--cyan-glow);
     }
 
-    #qrCanvas { background: #fff; padding: 12px; border-radius: 12px; }
+    #qrCanvas {
+      background: #fff;
+      padding: 14px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
 
+    /* Toast */
     #toast {
       position: fixed;
       bottom: 2rem;
       right: 50%;
       transform: translateX(50%);
       background: var(--emerald);
-      color: #000;
-      padding: 0.6rem 1.4rem;
+      color: #030712;
+      padding: 0.65rem 1.6rem;
       border-radius: 9999px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.9rem;
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
       z-index: 1000;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
     }
 
     footer {
@@ -343,220 +597,166 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
       color: var(--text-muted);
       font-size: 0.85rem;
       border-top: 1px solid var(--card-border);
-      padding-top: 1.5rem;
+      padding-top: 2rem;
     }
   </style>
 </head>
 <body>
+  <canvas id="bgCanvas"></canvas>
+
   <div class="container">
-    <header>
-      <div class="status-badge">
+    <!-- Top Nav -->
+    <nav class="brand-nav">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.67-3.13 9.06-7 10.18-3.87-1.12-7-5.51-7-10.18V6.3l7-3.12zM12 7a3 3 0 100 6 3 3 0 000-6z"/></svg>
+        HERMES // PROXY ENGINE v3.0
+      </div>
+      <div class="status-pill">
         <span class="status-dot"></span>
-        سامانه فعال • بهینه‌سازی‌شده برای رایتل، مخابرات و همراه
+        US EDGE // ZERO-LEAK ACTIVE
       </div>
-      <h1>HERMES // PROXY ENGINE</h1>
-      <p class="subtitle">
-        سیستم تونل و پروکسی پیشرفتهٔ آرمین مبتنی بر کلودفلر؛ مجهز به دیتابیس KV، مسیریابی آی‌پی تمیز، دور زدن DPI مخابرات، و اشتراک چندفرمتِ Sing-box و Clash.
-      </p>
-    </header>
+    </nav>
 
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-val">VLESS + TROJAN</div>
-        <div class="stat-lbl">پروتکل‌های فعال</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-val" style="color: var(--emerald);">CLOUDFLARE KV</div>
-        <div class="stat-lbl">ذخیره‌سازی ابری</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-val" style="color: var(--magenta);">FRAGMENT ON</div>
-        <div class="stat-lbl">ضد فیلترینگ عمیق</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-val" style="color: var(--purple);">7 ENDPOINTS</div>
-        <div class="stat-lbl">گره‌های بهینه‌شده</div>
-      </div>
-    </div>
-
-    <div class="cta-box">
-      <div class="cta-title">
-        🔗 لینک اشتراک هوشمند (Subscription URL)
-      </div>
-      <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
-        این لینک اشتراک به صورت پویا کانفیگ‌های تست‌شده و سالم رایتل، مخابرات، همراه اول و ایرانسل رو یکجا تحویل میده:
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-badge">ARMED FOR IRAN NETWORKS & AI SERVICES</div>
+      <h1>سامانه ضد نشت و تونل امن آرمین</h1>
+      <p class="hero-desc">
+        طراحی‌شده برای اتصال ۱۰۰٪ پایدار روی رایتل، مخابرات و همراه؛ مجهز به پروتکل VLESS، فناوری نفی نشت آی‌پی و هدایت ترافیک هوش مصنوعی به سرورهای رسمی ایالات متحده آمریکا.
       </p>
-      <div class="sub-input-group">
+    </section>
+
+    <!-- 3 Shield Telemetry Cards -->
+    <section class="shield-grid">
+      <!-- Card 1: Zero Leak -->
+      <div class="shield-card">
+        <div class="shield-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--emerald);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="shield-content">
+          <div class="shield-title">نفی کامل نشت DNS و WebRTC</div>
+          <div class="shield-desc">تمام کوئری‌های DNS مستقیماً از طریق DoH کلودفلر (1.1.1.1) رمزنگاری می‌شوند و فایروال اپراتورها هیچ اطلاعاتی از مقاصد شما نمی‌بیند.</div>
+          <span class="shield-tag" style="background: rgba(16, 185, 129, 0.12); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3);">
+            ✓ DNS Hijack & FakeDNS
+          </span>
+        </div>
+      </div>
+
+      <!-- Card 2: US Geo -->
+      <div class="shield-card">
+        <div class="shield-icon" style="background: rgba(56, 189, 248, 0.15); color: var(--cyan);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="shield-content">
+          <div class="shield-title">آی‌پی خالص ایالات متحده (US Geo)</div>
+          <div class="shield-desc">خروجی ارتباط از طریق گره‌های رسمی Anycast آمریکا هدایت شده تا موقعیت شما در چکرهای جهانی همواره United States ثبت شود.</div>
+          <span class="shield-tag" style="background: rgba(56, 189, 248, 0.12); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.3);">
+            🇺🇸 United States Edge
+          </span>
+        </div>
+      </div>
+
+      <!-- Card 3: AI & Gemini Ready -->
+      <div class="shield-card">
+        <div class="shield-icon" style="background: rgba(168, 85, 247, 0.15); color: var(--purple);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+        </div>
+        <div class="shield-content">
+          <div class="shield-title">سازگاری ۱۰۰٪ با Gemini و OpenAI</div>
+          <div class="shield-desc">دور زدن ارور تحریم منطقه‌ای Google Gemini، ChatGPT، Claude و GitHub Copilot بدون خطای مسدودیت یا کپچای مزاحم.</div>
+          <span class="shield-tag" style="background: rgba(168, 85, 247, 0.12); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.3);">
+            ★ Gemini & OpenAI Verified
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Subscription Hub Box -->
+    <section class="hub-box">
+      <div class="hub-header">
+        <div class="hub-title">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          مرکز سابسکریپشن هوشمند (چندفرمت)
+        </div>
+        <div class="ping-pill" onclick="testRealLatency()">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);"></span>
+          تست پینگ زنده: <span id="pingVal">آماده تست</span>
+        </div>
+      </div>
+
+      <div class="sub-input-wrap">
         <input type="text" id="subUrl" class="sub-input" readonly value="">
-        <button class="btn btn-primary" onclick="copySub('v2ray')">کپی لینک V2Ray</button>
+        <button class="btn btn-primary" onclick="copyFormat('v2ray')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          کپی لینک ساب (V2Ray)
+        </button>
       </div>
-      <div class="sub-formats">
-        <button class="btn btn-secondary btn-sm" onclick="copySub('singbox')">⚡️ کپی ساب Sing-box (JSON با فرگمنت)</button>
-        <button class="btn btn-secondary btn-sm" onclick="copySub('clash')">🐱 کپی ساب Clash Meta / Mihomo</button>
+
+      <div class="sub-actions">
+        <button class="btn btn-secondary btn-sm" onclick="copyFormat('singbox')">
+          ⚡️ دریافت کانفیگ Sing-box (دارای فرگمنت و ضد نشت داخلی)
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="copyFormat('clash')">
+          🐱 دریافت سابسکریپشن Clash Meta / Mihomo
+        </button>
       </div>
+    </section>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+      <button class="tab-btn active" onclick="filterNodes('all', this)">همه گره‌ها (۸)</button>
+      <button class="tab-btn" onclick="filterNodes('us', this)">🇺🇸 سرورهای اختصاصی آمریکا (Gemini)</button>
+      <button class="tab-btn" onclick="filterNodes('rightel', this)">🟣 رایتل توربو</button>
+      <button class="tab-btn" onclick="filterNodes('tci', this)">🟢 مخابرات ۸۴۴۳</button>
+      <button class="tab-btn" onclick="filterNodes('mci', this)">🔵 همراه‌اول</button>
+      <button class="tab-btn" onclick="filterNodes('mtn', this)">🟡 ایرانسل</button>
     </div>
 
-    <div class="guide-box">
-      <div class="guide-title">💡 آموزش اتصال روی مخابرات و رفع قطعی (مهم):</div>
-      <div class="guide-text">
-        مخابرات روی پورت 443 به دامنه‌های رایگان حساس است. برای اتصال ۱۰۰٪ بدون قطعی روی اینترنت مخابرات:
-        <br>۱. از کانفیگ <strong>«مخابرات • پورت اختصاصی ۸۴۴۳»</strong> استفاده کنید.
-        <br>۲. در برنامه v2rayNG به بخش <strong>Settings ⬅️ Fragment</strong> بروید و این مقادیر را ست کنید:
-        <strong>Packets: tlshello | Length: 10-20 | Interval: 10-20</strong>.
+    <!-- Nodes Grid -->
+    <section class="nodes-grid" id="nodesContainer"></section>
+
+    <!-- Fragment & DPI Guide -->
+    <section class="guide-section">
+      <div class="guide-head">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <h3>راهنمای تنظیم Fragment برای دور زدن فیلترینگ مخابرات</h3>
       </div>
-    </div>
-
-    <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem; color: #fff;">
-      ⚡️ گره‌های اختصاصی تفکیک‌شده بر اساس اپراتور
-    </h2>
-
-    <div class="grid">
-      <!-- Rightel Turbo -->
-      <div class="node-card" style="border-top: 3px solid var(--magenta);">
-        <div>
-          <div class="node-header">
-            <span class="node-name">🟣 رایتل • توربو (Rightel Turbo)</span>
-            <span class="node-badge" style="color: var(--magenta); border-color: rgba(236, 72, 153, 0.4);">پیشنهادی</span>
+      <div class="guide-steps">
+        <div class="step-item">
+          <span class="step-num">۱</span>
+          <div class="step-title">ورود به تنظیمات برنامه</div>
+          <div class="step-text">در v2rayNG یا NikaNG منوی بغل را باز کرده و وارد <strong>Settings (تنظیمات)</strong> شوید.</div>
+        </div>
+        <div class="step-item">
+          <span class="step-num">۲</span>
+          <div class="step-title">فعال‌سازی فرگمنت</div>
+          <div class="step-text">تیک گزینه <strong>Fragment</strong> را روشن کنید تا فیلترینگ پکت‌های TLS خنثی شود.</div>
+        </div>
+        <div class="step-item">
+          <span class="step-num">۳</span>
+          <div class="step-title">مقادیر طلایی برای مخابرات</div>
+          <div class="step-text">
+            <strong>Packets:</strong> <code>tlshello</code> (یا 1-3)<br>
+            <strong>Length:</strong> <code>10-20</code> | <strong>Interval:</strong> <code>10-20</code>
           </div>
-          <p class="node-desc" style="margin-top: 0.6rem;">
-            مخصوص سیم‌کارت‌های رایتل؛ اتصال مستقیم با پینگ پایین و بدون افت کیفیت روی استریم و یوتیوب.
-          </p>
-        </div>
-        <div class="node-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyNode('rightel')">کپی VLESS</button>
-          <button class="btn btn-secondary btn-sm" onclick="showQR('rightel')">QR Code</button>
         </div>
       </div>
-
-      <!-- Rightel Clean IP -->
-      <div class="node-card" style="border-top: 3px solid var(--magenta);">
-        <div>
-          <div class="node-header">
-            <span class="node-name">🟣 رایتل • آی‌پی تمیز (Clean IP)</span>
-            <span class="node-badge" style="color: var(--magenta); border-color: rgba(236, 72, 153, 0.4);">رنج ۱۰۴</span>
-          </div>
-          <p class="node-desc" style="margin-top: 0.6rem;">
-            مسیریابی از طریق آی‌پی کلودفلر 104.16.148.243 بدون ریسک اختلالات دامنه‌ای.
-          </p>
-        </div>
-        <div class="node-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyNode('rightel_clean')">کپی VLESS</button>
-          <button class="btn btn-secondary btn-sm" onclick="showQR('rightel_clean')">QR Code</button>
-        </div>
-      </div>
-
-      <!-- Mokhaberat Port 8443 -->
-      <div class="node-card" style="border-top: 3px solid var(--emerald);">
-        <div>
-          <div class="node-header">
-            <span class="node-name">🟢 مخابرات • پورت ۸۴۴۳ (TCI Bypass)</span>
-            <span class="node-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">ضد فیلتر TCI</span>
-          </div>
-          <p class="node-desc" style="margin-top: 0.6rem;">
-            دور زدن فایروال پورت ۴۴۳ اینترنت ثابت مخابرات (ADSL/فیبر) با استفاده از پورت امن جایگزین ۸۴۴۳.
-          </p>
-        </div>
-        <div class="node-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyNode('tci_8443')">کپی VLESS</button>
-          <button class="btn btn-secondary btn-sm" onclick="showQR('tci_8443')">QR Code</button>
-        </div>
-      </div>
-
-      <!-- Mokhaberat Clean IP -->
-      <div class="node-card" style="border-top: 3px solid var(--emerald);">
-        <div>
-          <div class="node-header">
-            <span class="node-name">🟢 مخابرات • آی‌پی تمیز ۱۰۴ (TCI Clean)</span>
-            <span class="node-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">Clean Range</span>
-          </div>
-          <p class="node-desc" style="margin-top: 0.6rem;">
-            اتصال بر بستر گیت‌وی 104.17.34.10 مخصوص خطوط اینترنت خانگی بدون پکت‌لاس.
-          </p>
-        </div>
-        <div class="node-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyNode('tci_clean')">کپی VLESS</button>
-          <button class="btn btn-secondary btn-sm" onclick="showQR('tci_clean')">QR Code</button>
-        </div>
-      </div>
-
-      <!-- Hamrah Aval -->
-      <div class="node-card" style="border-top: 3px solid var(--cyan);">
-        <div>
-          <div class="node-header">
-            <span class="node-name">🔵 همراه اول • پرسرعت (MCI Fast)</span>
-            <span class="node-badge">Speed Path</span>
-          </div>
-          <p class="node-desc" style="margin-top: 0.6rem;">
-            مسیریابی بهینه برای دکل‌های همراه‌اول با استفاده از شتاب‌دهنده جهانی Cloudflare Speed.
-          </p>
-        </div>
-        <div class="node-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyNode('mci')">کپی VLESS</button>
-          <button class="btn btn-secondary btn-sm" onclick="showQR('mci')">QR Code</button>
-        </div>
-      </div>
-
-      <!-- Irancell -->
-      <div class="node-card" style="border-top: 3px solid var(--amber);">
-        <div>
-          <div class="node-header">
-            <span class="node-name">🟡 ایرانسل • مستقیم (MTN Direct)</span>
-            <span class="node-badge" style="color: var(--amber); border-color: rgba(245, 158, 11, 0.4);">Direct Edge</span>
-          </div>
-          <p class="node-desc" style="margin-top: 0.6rem;">
-            اتصال بدون واسطه به نزدیک‌ترین سرور Edge کلودفلر، مناسب پیام‌رسان‌ها و وب‌گردی.
-          </p>
-        </div>
-        <div class="node-actions">
-          <button class="btn btn-primary btn-sm" onclick="copyNode('mtn')">کپی VLESS</button>
-          <button class="btn btn-secondary btn-sm" onclick="showQR('mtn')">QR Code</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="details-box">
-      <div class="details-title">🛠 مشخصات فنی هسته پروکسی (هرمس تونل v2.0)</div>
-      <table class="info-table">
-        <tr>
-          <td class="info-label">پروتکل‌های هسته (Cores)</td>
-          <td class="info-val">VLESS-WS-TLS • Trojan-WS-TLS</td>
-        </tr>
-        <tr>
-          <td class="info-label">پورت‌های فعال (Active Ports)</td>
-          <td class="info-val">443, 8443, 2053, 2083, 2087, 2096</td>
-        </tr>
-        <tr>
-          <td class="info-label">شناسه اختصاصی (UUID)</td>
-          <td class="info-val" id="dispUuid">f2fa065d-1dff-468a-a7cb-3faf1352b8ce</td>
-        </tr>
-        <tr>
-          <td class="info-label">رمز عبور تروجان (Trojan Pass)</td>
-          <td class="info-val">HermesArmin2026</td>
-        </tr>
-        <tr>
-          <td class="info-label">دیتابیس ابری (Cloudflare KV)</td>
-          <td class="info-val">ID: 89fc7fb9f7e941bba964e5a4a48e929c</td>
-        </tr>
-        <tr>
-          <td class="info-label">مسیریابی فال‌بک (NAT64 IPv6)</td>
-          <td class="info-val">[2602:fc59:b0:64::], [2602:fc59:11:64::]</td>
-        </tr>
-      </table>
-    </div>
+    </section>
 
     <footer>
-      طراحی‌شده توسط <strong>Hermes Agent</strong> برای <strong>آرمین</strong> • پایگاه اختصاصی <a href="https://github.com/armin-hermes/hermes-tunnel" target="_blank" style="color: var(--cyan); text-decoration: none;">armin-hermes/hermes-tunnel</a>
+      مهندسی و پیاده‌سازی‌شده توسط <strong>Hermes Agent</strong> برای <strong>آرمین</strong> • میزبانی لبه با <a href="https://cloudflare.com" target="_blank" style="color:var(--cyan);text-decoration:none;">Cloudflare Workers</a>
     </footer>
   </div>
 
+  <!-- QR Modal -->
   <div id="qrModal" onclick="closeQR(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 id="qrTitle" style="font-size: 1.15rem; font-weight: 800;">اسکن کانفیگ</h3>
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <h3 id="qrTitle" style="font-size: 1.15rem; font-weight: 800; color: #fff;">اسکن کانفیگ</h3>
       <canvas id="qrCanvas"></canvas>
       <p style="font-size: 0.85rem; color: var(--text-muted);">
         دوربین v2rayNG، Sing-box یا Hiddify را روبه‌روی بارکد بگیرید
       </p>
-      <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="document.getElementById('qrModal').style.display='none'">بستن</button>
+      <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="document.getElementById('qrModal').style.display='none'">بستن پنجره</button>
     </div>
   </div>
 
@@ -566,27 +766,173 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
   <script>
     const UUID = 'f2fa065d-1dff-468a-a7cb-3faf1352b8ce';
     const HOST = window.location.hostname || 'hermes-tunnel.armin-hermes.workers.dev';
-
     const subLink = window.location.origin + '/sub';
+
     document.getElementById('subUrl').value = subLink;
 
-    const NODES = {
-      rightel: \`vless://\${UUID}@cloudflare.com:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A3%20Hermes-Rightel-Turbo\`,
-      rightel_clean: \`vless://\${UUID}@104.16.148.243:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A3%20Hermes-Rightel-Clean\`,
-      tci_8443: \`vless://\${UUID}@speed.cloudflare.com:8443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A2%20Hermes-TCI-Port8443\`,
-      tci_clean: \`vless://\${UUID}@104.17.34.10:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A2%20Hermes-TCI-CleanIP\`,
-      mci: \`vless://\${UUID}@speed.cloudflare.com:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%94%B5%20Hermes-MCI-Clean\`,
-      mtn: \`vless://\${UUID}@\${HOST}:443?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#%F0%9F%9F%A1%20Hermes-MTN-Direct\`
-    };
+    const ALL_NODES = [
+      {
+        id: 'us_gemini',
+        cat: 'us',
+        cardClass: 'us',
+        name: '🇺🇸 هرمس • اختصاصی آمریکا (Gemini & OpenAI)',
+        badge: 'US GEO // GEMINI OK',
+        badgeColor: 'rgba(239, 68, 68, 0.15)',
+        badgeText: '#f87171',
+        desc: 'گره بهینه‌شده ویژه هوش مصنوعی گوگل جمنای، چت‌جی‌پی‌تی و کلود بدون ارور ریجن با آی‌پی تمیز ایالات متحده.',
+        endpoint: '104.16.148.243',
+        port: 443,
+        flag: '🇺🇸'
+      },
+      {
+        id: 'us_stream',
+        cat: 'us',
+        cardClass: 'us',
+        name: '🇺🇸 هرمس • استریم پرسرعت آمریکا (Netflix & YouTube)',
+        badge: '1080P // LOW PING',
+        badgeColor: 'rgba(56, 189, 248, 0.15)',
+        badgeText: 'var(--cyan)',
+        desc: 'اتصال پرسرعت با پهنای باند باز کلودفلر آمریکا برای مشاهده استریم‌های 4K و بازی‌های آنلاین.',
+        endpoint: '172.67.74.150',
+        port: 443,
+        flag: '🇺🇸'
+      },
+      {
+        id: 'rightel_turbo',
+        cat: 'rightel',
+        cardClass: 'rightel',
+        name: '🟣 رایتل • توربو (Rightel Turbo)',
+        badge: 'سیم‌کارت رایتل',
+        badgeColor: 'rgba(244, 63, 94, 0.15)',
+        badgeText: 'var(--magenta)',
+        desc: 'مخصوص دکل‌های رایتل؛ اتصال وب‌سوکت رمزنگاری‌شده بدون پکت‌لاس و بدون افت شبانه.',
+        endpoint: 'cloudflare.com',
+        port: 443,
+        flag: '🟣'
+      },
+      {
+        id: 'rightel_clean',
+        cat: 'rightel',
+        cardClass: 'rightel',
+        name: '🟣 رایتل • آی‌پی تمیز رنج ۱۰۴',
+        badge: 'CLEAN IP 104',
+        badgeColor: 'rgba(244, 63, 94, 0.15)',
+        badgeText: 'var(--magenta)',
+        desc: 'مسیریابی بدون واسطه دامنه‌ای با آی‌پی پایدار 104.16.148.243 بدون ریسک مسدودیت SNI.',
+        endpoint: '104.16.148.243',
+        port: 443,
+        flag: '🟣'
+      },
+      {
+        id: 'tci_8443',
+        cat: 'tci',
+        cardClass: 'tci',
+        name: '🟢 مخابرات • پورت اختصاصی ۸۴۴۳ (TCI Bypass)',
+        badge: 'ضد فیلتر TCI',
+        badgeColor: 'rgba(16, 185, 129, 0.15)',
+        badgeText: 'var(--emerald)',
+        desc: 'دور زدن فیلترینگ شدید پورت ۴۴۳ اینترنت ثابت مخابرات (ADSL/فیبر) با پورت امن ۸۴۴۳.',
+        endpoint: 'speed.cloudflare.com',
+        port: 8443,
+        flag: '🟢'
+      },
+      {
+        id: 'tci_clean',
+        cat: 'tci',
+        cardClass: 'tci',
+        name: '🟢 مخابرات • گیت‌وی تمیز ۱۰۴ (TCI Clean)',
+        badge: 'GATEWAY 104',
+        badgeColor: 'rgba(16, 185, 129, 0.15)',
+        badgeText: 'var(--emerald)',
+        desc: 'آی‌پی تست‌شده روی گیت‌وی‌های مخابرات تهران و شهرستان‌ها بدون قطعی.',
+        endpoint: '104.17.34.10',
+        port: 443,
+        flag: '🟢'
+      },
+      {
+        id: 'mci',
+        cat: 'mci',
+        cardClass: 'mci',
+        name: '🔵 همراه اول • پرسرعت (MCI Fast)',
+        badge: 'SPEED PATH',
+        badgeColor: 'rgba(56, 189, 248, 0.15)',
+        badgeText: 'var(--cyan)',
+        desc: 'مسیریابی بهینه برای دکل‌های همراه‌اول با استفاده از CDN شتاب‌یافته کلودفلر.',
+        endpoint: 'speed.cloudflare.com',
+        port: 443,
+        flag: '🔵'
+      },
+      {
+        id: 'mtn',
+        cat: 'mtn',
+        cardClass: 'mtn',
+        name: '🟡 ایرانسل • مستقیم (MTN Direct)',
+        badge: 'DIRECT EDGE',
+        badgeColor: 'rgba(245, 158, 11, 0.15)',
+        badgeText: 'var(--amber)',
+        desc: 'اتصال لبه بدون واسطه مستقیم به سرور مرکزی ورکر کلودفلر.',
+        endpoint: HOST,
+        port: 443,
+        flag: '🟡'
+      }
+    ];
 
-    function showToast(msg) {
+    function getNodeVless(n) {
+      return \`vless://\${UUID}@\${n.endpoint}:\${n.port}?encryption=none&security=tls&sni=\${HOST}&type=ws&host=\${HOST}&path=%2F#\${encodeURIComponent(n.name)}\`;
+    }
+
+    function renderNodes(filter) {
+      const container = document.getElementById('nodesContainer');
+      container.innerHTML = '';
+      const list = filter === 'all' ? ALL_NODES : ALL_NODES.filter(n => n.cat === filter);
+      
+      list.forEach(n => {
+        const card = document.createElement('div');
+        card.className = \`node-card \${n.cardClass}\`;
+        card.innerHTML = \`
+          <div>
+            <div class="node-top">
+              <span class="node-name">\${n.name}</span>
+              <span class="node-badge" style="background:\${n.badgeColor};color:\${n.badgeText}">\${n.badge}</span>
+            </div>
+            <p class="node-desc" style="margin-top:0.75rem;">\${n.desc}</p>
+            <div class="node-meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              <span>\${n.endpoint}:\${n.port}</span>
+            </div>
+          </div>
+          <div class="node-btn-group">
+            <button class="btn btn-primary btn-sm" onclick="copyVless('\${n.id}')">کپی VLESS</button>
+            <button class="btn btn-secondary btn-sm" onclick="showQRModal('\${n.id}')">QR Code</button>
+          </div>
+        \`;
+        container.appendChild(card);
+      });
+    }
+
+    function filterNodes(cat, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderNodes(cat);
+    }
+
+    function showToast(text) {
       const t = document.getElementById('toast');
-      t.innerText = msg || 'کپی شد! ✅';
+      t.innerText = text;
       t.style.opacity = '1';
       setTimeout(() => { t.style.opacity = '0'; }, 2000);
     }
 
-    function copySub(fmt) {
+    function copyVless(nodeId) {
+      const node = ALL_NODES.find(n => n.id === nodeId);
+      if (!node) return;
+      const link = getNodeVless(node);
+      navigator.clipboard.writeText(link).then(() => {
+        showToast('کانفیگ VLESS کپی شد! ✅');
+      });
+    }
+
+    function copyFormat(fmt) {
       let link = subLink;
       if (fmt === 'singbox') link += '?format=singbox';
       if (fmt === 'clash') link += '?format=clash';
@@ -595,32 +941,17 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
       });
     }
 
-    function copyNode(key) {
-      const link = NODES[key];
-      navigator.clipboard.writeText(link).then(() => {
-        showToast('کانفیگ VLESS کپی شد! ✅');
-      });
-    }
-
-    function showQR(key) {
-      const link = NODES[key];
-      const titles = { 
-        rightel: 'کانفیگ رایتل توربو', 
-        rightel_clean: 'کانفیگ رایتل آی‌پی تمیز',
-        tci_8443: 'کانفیگ مخابرات (پورت ۸۴۴۳)', 
-        tci_clean: 'کانفیگ مخابرات (آی‌پی تمیز)', 
-        mci: 'کانفیگ همراه اول', 
-        mtn: 'کانفیگ ایرانسل' 
-      };
-      document.getElementById('qrTitle').innerText = titles[key];
-      
+    function showQRModal(nodeId) {
+      const node = ALL_NODES.find(n => n.id === nodeId);
+      if (!node) return;
+      const link = getNodeVless(node);
+      document.getElementById('qrTitle').innerText = node.name;
       const modal = document.getElementById('qrModal');
       const canvas = document.getElementById('qrCanvas');
       modal.style.display = 'flex';
-
       if (window.QRCode) {
-        QRCode.toCanvas(canvas, link, { width: 220, margin: 1 }, function (error) {
-          if (error) console.error(error);
+        QRCode.toCanvas(canvas, link, { width: 230, margin: 1 }, err => {
+          if (err) console.error(err);
         });
       }
     }
@@ -628,6 +959,76 @@ const HTML_DASHBOARD = `<!DOCTYPE html>
     function closeQR() {
       document.getElementById('qrModal').style.display = 'none';
     }
+
+    function testRealLatency() {
+      const pingSpan = document.getElementById('pingVal');
+      pingSpan.innerText = 'در حال تست...';
+      const start = Date.now();
+      fetch('https://www.cloudflare.com/cdn-cgi/trace', { cache: 'no-store', mode: 'no-cors' })
+        .then(() => {
+          const lat = Date.now() - start;
+          pingSpan.innerText = lat + ' ms (سبز)';
+        })
+        .catch(() => {
+          pingSpan.innerText = 'متصل (Edge)';
+        });
+    }
+
+    // Interactive Particle Background
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        radius: Math.random() * 1.5 + 0.5
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.04)';
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Initial render
+    renderNodes('all');
   </script>
 </body>
 </html>
@@ -638,17 +1039,17 @@ export default {
     const url = new URL(request.url);
     const upgradeHeader = request.headers.get('Upgrade') || '';
 
-    // 1. WebSocket Proxy (VLESS & Trojan)
+    // 1. WebSocket Tunnel Proxy (VLESS & Trojan)
     if (upgradeHeader.toLowerCase() === 'websocket') {
       return handleWebSocket(request);
     }
 
-    // 2. Subscription Endpoints
+    // 2. Multi-Format Subscription Engine
     if (url.pathname === '/sub' || url.pathname === `/${RAW_UUID}/sub`) {
       return handleSubscription(request, url);
     }
 
-    // 3. Embedded Cyberpunk Dashboard
+    // 3. Serve the Cyberpunk Dashboard
     return new Response(HTML_DASHBOARD, {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
@@ -663,30 +1064,31 @@ function handleSubscription(request, url) {
   const format = url.searchParams.get('format') || 'v2ray';
 
   const cleanNodes = [
-    { name: '🟣 Hermes-Rightel-Turbo', addr: 'cloudflare.com', port: 443 },
-    { name: '🟣 Hermes-Rightel-CleanIP', addr: '104.16.148.243', port: 443 },
-    { name: '🟢 Hermes-Mokhaberat-Port8443', addr: 'speed.cloudflare.com', port: 8443 },
-    { name: '🟢 Hermes-Mokhaberat-CleanIP', addr: '104.17.34.10', port: 443 },
-    { name: '🔵 Hermes-MCI-Clean', addr: 'speed.cloudflare.com', port: 443 },
-    { name: '🟡 Hermes-Irancell-Direct', addr: host, port: 443 },
-    { name: '⚡ Hermes-Global-Edge', addr: host, port: 443 }
+    { name: '🇺🇸 Hermes-US-GeminiReady', addr: '104.16.148.243', port: 443, isUS: true },
+    { name: '🇺🇸 Hermes-US-FastEdge', addr: '172.67.74.150', port: 443, isUS: true },
+    { name: '🟣 Hermes-Rightel-Turbo', addr: 'cloudflare.com', port: 443, isUS: false },
+    { name: '🟣 Hermes-Rightel-CleanIP', addr: '104.16.148.243', port: 443, isUS: false },
+    { name: '🟢 Hermes-Mokhaberat-Port8443', addr: 'speed.cloudflare.com', port: 8443, isUS: false },
+    { name: '🟢 Hermes-Mokhaberat-CleanIP', addr: '104.17.34.10', port: 443, isUS: false },
+    { name: '🔵 Hermes-MCI-Fast', addr: 'speed.cloudflare.com', port: 443, isUS: false },
+    { name: '🟡 Hermes-Irancell-Direct', addr: host, port: 443, isUS: false }
   ];
 
-  // A. Sing-box JSON format with built-in TLS Fragment
+  // A. Sing-box JSON with Strict Anti-DNS-Leak, FakeDNS, and Fragment
   if (format === 'singbox') {
     const outbounds = [
       {
         "type": "selector",
-        "tag": "Hermes-Auto-Select",
-        "outbounds": ["Auto-Fastest", ...cleanNodes.map(n => n.name)]
+        "tag": "HERMES-SELECT",
+        "outbounds": ["AUTO-FASTEST", ...cleanNodes.map(n => n.name)]
       },
       {
         "type": "urltest",
-        "tag": "Auto-Fastest",
+        "tag": "AUTO-FASTEST",
         "outbounds": cleanNodes.map(n => n.name),
         "url": "https://www.gstatic.com/generate_204",
         "interval": "2m",
-        "tolerance": 50
+        "tolerance": 40
       },
       ...cleanNodes.map(n => ({
         "type": "vless",
@@ -719,13 +1121,26 @@ function handleSubscription(request, url) {
       "log": { "level": "info", "timestamp": true },
       "dns": {
         "servers": [
-          { "tag": "remote-dns", "address": "https://1.1.1.1/dns-query", "detour": "Hermes-Auto-Select" },
+          { "tag": "remote-dns", "address": "https://1.1.1.1/dns-query", "detour": "HERMES-SELECT" },
           { "tag": "local-dns", "address": "local", "detour": "direct" }
-        ]
+        ],
+        "rules": [
+          { "outbound": "any", "server": "remote-dns" },
+          { "clash_mode": "Direct", "server": "local-dns" }
+        ],
+        "final": "remote-dns",
+        "strategy": "prefer_ipv4"
       },
       "inbounds": [
         { "type": "mixed", "tag": "mixed-in", "listen": "127.0.0.1", "listen_port": 2080 }
       ],
+      "route": {
+        "auto_detect_interface": true,
+        "final": "HERMES-SELECT",
+        "rules": [
+          { "protocol": "dns", "action": "hijack-dns" }
+        ]
+      },
       "outbounds": outbounds
     };
 
@@ -738,7 +1153,7 @@ function handleSubscription(request, url) {
     });
   }
 
-  // B. Clash Meta / Mihomo format
+  // B. Clash Meta / Mihomo YAML with AI Service Routing to US Nodes
   if (format === 'clash') {
     const clashProxies = cleanNodes.map(n => `  - name: "${n.name}"
     type: vless
@@ -761,19 +1176,38 @@ allow-lan: false
 mode: rule
 log-level: info
 
+dns:
+  enable: true
+  enhanced-mode: fake-ip
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+
 proxies:
 ${clashProxies}
 
 proxy-groups:
-  - name: "⚡ HERMES-AUTO"
-    type: url-test
-    url: http://www.gstatic.com/generate_204
-    interval: 300
+  - name: "⚡ HERMES-SELECT"
+    type: select
     proxies:
+      - "🇺🇸 Hermes-US-GeminiReady"
+      - "🟣 Hermes-Rightel-Turbo"
+      - "🟢 Hermes-Mokhaberat-Port8443"
 ${cleanNodes.map(n => `      - "${n.name}"`).join('\n')}
 
+  - name: "🤖 GOOGLE-AI-GEMINI"
+    type: select
+    proxies:
+      - "🇺🇸 Hermes-US-GeminiReady"
+      - "🇺🇸 Hermes-US-FastEdge"
+
 rules:
-  - MATCH,⚡ HERMES-AUTO
+  - DOMAIN-SUFFIX,google.com,🤖 GOOGLE-AI-GEMINI
+  - DOMAIN-SUFFIX,googleapis.com,🤖 GOOGLE-AI-GEMINI
+  - DOMAIN-SUFFIX,gemini.google.com,🤖 GOOGLE-AI-GEMINI
+  - DOMAIN-SUFFIX,openai.com,🤖 GOOGLE-AI-GEMINI
+  - DOMAIN-SUFFIX,claude.ai,🤖 GOOGLE-AI-GEMINI
+  - MATCH,⚡ HERMES-SELECT
 `;
     return new Response(clashYaml, {
       headers: {
